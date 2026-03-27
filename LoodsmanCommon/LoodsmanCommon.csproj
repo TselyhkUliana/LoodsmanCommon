@@ -103,7 +103,6 @@
     <Compile Include="Entities\ILLink.cs" />
     <Compile Include="Entities\LAttributeOwner.cs" />
     <Compile Include="Entities\LEffectivity.cs" />
-    <Compile Include="Entities\LEnum.cs" />
     <Compile Include="Entities\Meta\CreationInfo.cs" />
     <Compile Include="Entities\Meta\ILAttributeInfo.cs" />
     <Compile Include="Entities\Meta\LEffectivityTypeInfo.cs" />

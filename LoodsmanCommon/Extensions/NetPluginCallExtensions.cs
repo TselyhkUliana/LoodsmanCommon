@@ -145,34 +145,6 @@ namespace LoodsmanCommon
     public static DataTable Native_RevokeRightsForObjects2(this INetPluginCall pc, int versionId, int subjectId, int subjectType) =>
         pc.GetDataTable("RevokeRightsForObjects2", new object[,] { { versionId, subjectId, subjectType } });
 
-    /// <summary>
-    /// Добавляет, удаляет или обновляет директивные права доступа пользователя, должности или организационной единицы к объекту.
-    /// </summary>
-    /// <remarks>Метод работает следующим образом: 
-    /// <br/>если boDel = true, то заданные права удаляются;
-    /// <br/>если директивные права доступа к объекту для субъекта уже существуют, то их уровень будет изменен;
-    /// <br/>если директивные права доступа к объекту для субъекта отсутствуют, то они будут добавлены.
-    ///</remarks>
-    /// <param name="type">Название типа объекта.</param>
-    /// <param name="product">Значение ключевого атрибута объекта.</param>
-    /// <param name="version">Номер версии объекта.</param>
-    /// <param name="versionId"> Идентификатор версии объекта.</param>
-    /// <param name="idSubject">Идентификатор субъекта доступа.</param>
-    /// <param name="subjectType">Тип субъекта доступа:
-    /// <br/>0 – пользователь;
-    /// <br/>1 – должность;
-    /// <br/>2 – организационная единица.
-    ///</param>
-    /// <param name="privileges"> Уровень прав доступа:
-    /// 0 – запрет доступа;
-    /// <br/>1 – установить доступ Только чтение;
-    /// <br/>2 – установить доступ Чтение/запись;
-    /// <br/>3 – установить доступ Полный доступ.
-    ///</param>
-    /// <param name="del">Признак удаления прав доступа (true – удалять, false – не удалять).</param>
-    public static DataTable Native_UpGrantOnVersion2(this INetPluginCall pc, string type, string product, string version, int versionId, int idSubject, int subjectType, int privileges, bool del) =>
-        pc.GetDataTable("UpGrantOnVersion2", type, product, version, versionId, idSubject, subjectType, privileges, del);
-
     #endregion
 
     #region Справочная информация
