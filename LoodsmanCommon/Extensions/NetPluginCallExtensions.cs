@@ -42,6 +42,139 @@ namespace LoodsmanCommon
     public static DataTable Native_GetProxyUseCases(this INetPluginCall pc, int proxyId = 0, int typeId = 0, int documentId = 0) =>
         pc.GetDataTable("GetProxyUseCases", proxyId, typeId, documentId);
 
+
+    #region Права доступа к объектам
+
+    /// <summary>
+    /// Возвращает информацию о директивных правах доступа пользователей, должностей, организационных единиц к объектам.
+    /// <br/>
+    /// <br/>Возвращает набор данных с полями:
+    /// <br/>[_ID_VERSION] int – идентификатор объекта;
+    /// <br/>[_ID] int – идентификатор субъекта;
+    /// <br/>[_NAME] string – имя субъекта;
+    /// <br/>[_FULLNAME] string – полное имя субъекта;
+    /// <br/>[_ACCESSLEVEL] int – действительный уровень прав доступа субъекта к объекту;
+    /// <br/>[_DEFACCESSLEVEL] int – умолчательный уровень прав доступа субъекта к объекту;
+    /// <br/>[_MAXACCESSLEVEL] int – максимальный уровень прав доступа субъекта к объекту;
+    /// <br/>[_APPOINTEDACCESSLEVEL] int – назначенный уровень прав доступа субъекта к объекту;
+    /// <br/>[_TYPE] int – тип субъекта:
+    /// <br/>0 – пользователь;
+    /// <br/>1 – должность;
+    /// <br/>2 – организационная единица.
+    /// </summary>
+    /// <param name="ids">Список идентификаторов объектов, для которых необходимо получить информацию о директивных правах.</param>
+    public static DataTable Native_GetInfoAboutVersionsPrivileges2(this INetPluginCall pc, IEnumerable<int> ids) =>
+        pc.GetDataTable("GetInfoAboutVersionsPrivileges2", string.Join(Constants.ID_SEPARATOR, ids));
+
+    /// <inheritdoc cref="Native_GetInfoAboutVersionsPrivileges2(INetPluginCall, IEnumerable{int})"/>
+    /// <param name="id">Идентификатор объекта.</param>
+    public static DataTable Native_GetInfoAboutVersionPrivileges2(this INetPluginCall pc, int id) =>
+        pc.Native_GetInfoAboutVersionsPrivileges2(new[] { id });
+
+    /// <summary>
+    /// Возвращает права доступа к паре тип – состояние.
+    /// <br/>
+    /// <br/>Возвращает набор данных с полями:
+    /// <br/>[_ID] int – идентификатор записи о правах доступа;
+    /// <br/>[_NAME] string – имя пользователя прав доступа;
+    /// <br/>[_FULLNAME] string – полное имя пользователя прав доступа;
+    /// <br/>[_ACCESSLEVEL] int – уровень доступа;
+    /// <br/>[_MAXACCESSLEVEL] int – максимальный уровень доступа;
+    /// <br/>[_IS_GROUP] int – является ли ролью.
+    /// </summary>
+    /// <param name="typeId">Идентификатор типа, для которого необходимо получить права доступа.</param>
+    /// <param name="stateId">Идентификатор состояния, для которого необходимо получить права доступа.</param>
+    public static DataTable Native_GetTypeStateAccess(this INetPluginCall pc, int typeId, int stateId) =>
+        pc.GetDataTable("GetTypeStateAccess", typeId, stateId);
+
+    /// <summary>
+    /// Назначает пользователям, должностям, организационным единицам права доступа к группе объектов.
+    /// <br/>
+    /// <br/>Возвращает набор данных с полями:
+    /// <br/>[_ID_VERSION] int – идентификатор версии объекта;
+    /// <br/>[_ID_SUBJECT] int – идентификатор субъекта;
+    /// <br/>[_SUBJECT_TYPE] int – тип субъекта:
+    /// <br/>0 – пользователь;
+    /// <br/>1 – должность;
+    /// <br/>2 – организационная единица;
+    /// <br/>[_USERNAME] string – имя субъекта;
+    /// <br/>[_OWN_ACCESSLEVEL] int – назначенный уровень доступа к объекту;
+    /// <br/>[_ACCESSLEVEL] int – действительный уровень доступа к объекту;
+    /// <br/>[_ERRMSG] string – описание ошибки;
+    /// <br/>[_ERRCODE] int – код ошибки;
+    /// <br/>[_INDEX] int – позиция элемента во входном списке объектов.
+    /// </summary>
+    /// <param name="versionId"> Идентификатор версии объекта.</param>
+    /// <param name="subjectId"> Идентификатор субъекта прав доступа.</param>
+    /// <param name="subjectType"> Тип субъекта прав доступа:
+    /// <br/>0 – пользователь;
+    /// <br/>1 – должность;
+    /// <br/>2 – организационная единица.
+    ///</param>
+    /// <param name="access">Уровень доступа к объекту:
+    /// <br/>0 – запрет доступа;
+    /// <br/>1 – установить доступ Только чтение;
+    /// <br/>2 – установить доступ Чтение/запись;
+    /// <br/>3 – установить доступ Полный доступ;
+    /// </param>
+    public static DataTable Native_GrantRightsForObjects2(this INetPluginCall pc, int versionId, int subjectId, int subjectType, int access) =>
+        pc.GetDataTable("GrantRightsForObjects2", new object[,] { { versionId, subjectId, subjectType, access } });
+
+    /// <summary>
+    /// Удаляет права доступа пользователей, должностей, организационных единиц к группе объектов.
+    /// <br/>
+    /// <br/>Возвращает набор данных с полями:
+    /// <br/>[_ID_VERSION] int – идентификатор версии объекта;
+    /// <br/>[_ID_SUBJECT] int – идентификатор субъекта;
+    /// <br/>[_SUBJECT_TYPE] int – тип субъекта:
+    /// <br/>0 – пользователь;
+    /// <br/>1 – должность;
+    /// <br/>2 – организационная единица;
+    /// <br/>[_USERNAME] string – имя субъекта;
+    /// <br/>[_ERRMSG] string – описание ошибки;
+    /// <br/>[_ERRCODE] int – код ошибки;
+    /// <br/>[_INDEX] int – позиция элемента во входном списке объектов.
+    /// </summary>
+    /// <param name="versionId">Идентификатор версии объекта.</param>
+    /// <param name="subjectId">Идентификатор субъекта прав доступа.</param>
+    /// <param name="subjectType"> Тип субъекта прав доступа:
+    /// <br/>0 – пользователь;
+    /// <br/>1 – должность;
+    /// <br/>2 – организационная единица.
+    ///</param>
+    public static DataTable Native_RevokeRightsForObjects2(this INetPluginCall pc, int versionId, int subjectId, int subjectType) =>
+        pc.GetDataTable("RevokeRightsForObjects2", new object[,] { { versionId, subjectId, subjectType } });
+
+    /// <summary>
+    /// Добавляет, удаляет или обновляет директивные права доступа пользователя, должности или организационной единицы к объекту.
+    /// </summary>
+    /// <remarks>Метод работает следующим образом: 
+    /// <br/>если boDel = true, то заданные права удаляются;
+    /// <br/>если директивные права доступа к объекту для субъекта уже существуют, то их уровень будет изменен;
+    /// <br/>если директивные права доступа к объекту для субъекта отсутствуют, то они будут добавлены.
+    ///</remarks>
+    /// <param name="type">Название типа объекта.</param>
+    /// <param name="product">Значение ключевого атрибута объекта.</param>
+    /// <param name="version">Номер версии объекта.</param>
+    /// <param name="versionId"> Идентификатор версии объекта.</param>
+    /// <param name="idSubject">Идентификатор субъекта доступа.</param>
+    /// <param name="subjectType">Тип субъекта доступа:
+    /// <br/>0 – пользователь;
+    /// <br/>1 – должность;
+    /// <br/>2 – организационная единица.
+    ///</param>
+    /// <param name="privileges"> Уровень прав доступа:
+    /// 0 – запрет доступа;
+    /// <br/>1 – установить доступ Только чтение;
+    /// <br/>2 – установить доступ Чтение/запись;
+    /// <br/>3 – установить доступ Полный доступ.
+    ///</param>
+    /// <param name="del">Признак удаления прав доступа (true – удалять, false – не удалять).</param>
+    public static DataTable Native_UpGrantOnVersion2(this INetPluginCall pc, string type, string product, string version, int versionId, int idSubject, int subjectType, int privileges, bool del) =>
+        pc.GetDataTable("UpGrantOnVersion2", type, product, version, versionId, idSubject, subjectType, privileges, del);
+
+    #endregion
+
     #region Справочная информация
 
     /// <summary> Возвращает возможные атрибуты связей для связки типов, включая служебные.
@@ -907,7 +1040,7 @@ namespace LoodsmanCommon
     /// <param name="reportParams"> Произвольный набор параметров. Применяется по усмотрению разработчика. </param>
     /// <returns> Набор данных с полями, определенными в соответствующей хранимой процедуре. </returns>
     public static DataTable Native_GetReport(this INetPluginCall pc, string reportName, IEnumerable<int> objectsIds = null, string reportParams = null) =>
-        pc.GetDataTable("GetReport", reportName, objectsIds == null || objectsIds is int[] ? objectsIds : objectsIds.ToArray(), reportParams);
+        pc.GetDataTable("GetReport", reportName, objectsIds == null || objectsIds is int[]? objectsIds : objectsIds.ToArray(), reportParams);
 
     /// <summary> Возвращает список отчетов и папок.
     /// <br/>Параметры отчета можно получить с помощью метода <see cref="Native_GetParameterList(INetPluginCall, int)">GetParameterList</see>
@@ -1179,16 +1312,16 @@ namespace LoodsmanCommon
     /// <param name="objId"> Идентификатор объекта ЛОЦМАН. </param>
     /// <param name="effIdType"> Идентификатор типа применяемости. </param>
     /// </summary>
-    public static int Native_AddVersionEff(this INetPluginCall pc, int objId,int effIdType) =>
-        (int)pc.RunMethod("AddVersionEff", objId,effIdType);
+    public static int Native_AddVersionEff(this INetPluginCall pc, int objId, int effIdType) =>
+        (int)pc.RunMethod("AddVersionEff", objId, effIdType);
 
     /// <summary> Добавить к объекту ЛОЦМАН применяемость.
     /// <param name="effTypeId"> Идентификатор экземпляра типа применяемости. </param>
     /// <param name="attributeName"> Имя атрибута. </param>
     /// <param name="attributeValue"> Значение атрибута. </param>
     /// </summary>
-    public static void Native_SetVersionEffAttrValue(this INetPluginCall pc, int effTypeId,string attributeName, object attributeValue) =>
-        pc.RunMethod("SetVersionEffAttrValue", effTypeId,attributeName,attributeValue);
+    public static void Native_SetVersionEffAttrValue(this INetPluginCall pc, int effTypeId, string attributeName, object attributeValue) =>
+        pc.RunMethod("SetVersionEffAttrValue", effTypeId, attributeName, attributeValue);
 
     #endregion
   }
