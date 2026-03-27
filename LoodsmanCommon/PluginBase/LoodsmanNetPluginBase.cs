@@ -9,10 +9,10 @@ namespace LoodsmanCommon
 {
   public abstract class LoodsmanNetPluginBase : ILoodsmanNetPlugin
   {
-    protected IntPtr _appHandle;
     protected ILoodsmanApplication _application;
     protected ILoodsmanProxy _proxy;
     protected ILoodsmanMeta _meta;
+    protected ILoodsmanWindowMessenger _windowMessenger;
 
     public abstract void BindMenu(IMenuDefinition menu);
 
@@ -48,23 +48,33 @@ namespace LoodsmanCommon
     protected virtual void PluginInit(INetPluginCall iNetPC)
     {
       _application = (ILoodsmanApplication)iNetPC.PluginCall;
-      _appHandle = new IntPtr(_application.AppHandle);
       _meta = GetLoodsmanMeta(iNetPC);
       _proxy = GetLoodsmanProxy(iNetPC);
+      _windowMessenger = GetLoodsmanWindowMessenger(iNetPC);
     }
 
     /// <summary> Возвращает прокси объект, имеет смысл переопределять в случае собственной реализации интерфейса. </summary>
-    /// <param name="iNetPC"> Интерфейс взаимодействия с плагином. </param>
+    /// <param name="iNetPC"> Интерфейс взаимодействия с плагином.</param>
     protected virtual ILoodsmanProxy GetLoodsmanProxy(INetPluginCall iNetPC)
     {
       return ProxyBuilder.GetInstance(iNetPC);
     }
 
     /// <summary> Возвращает объект меты, имеет смысл переопределять в случае собственной реализации интерфейса. </summary>
-    /// <param name="iNetPC"> Интерфейс взаимодействия с плагином. </param>
+    /// <param name="iNetPC">Интерфейс взаимодействия с плагином.</param>
     protected virtual ILoodsmanMeta GetLoodsmanMeta(INetPluginCall iNetPC)
     {
       return MetaBuilder.GetInstance(iNetPC);
+    }
+
+    /// <summary>
+    ///  Возвращает объект для взаимодействия с окнами (сообщениями) Лоцман, имеет смысл переопределять в случае собственной реализации интерфейса.
+    /// </summary>
+    /// <param name="iNetPC">Интерфейс взаимодействия с плагином.</param>
+    /// <returns></returns>
+    protected virtual ILoodsmanWindowMessenger GetLoodsmanWindowMessenger(INetPluginCall iNetPC)
+    {
+      return WindowMessengerBuilder.GetInstance(iNetPC);
     }
 
     /// <summary> Вызывается при необходимости найти сборку. </summary>

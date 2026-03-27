@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
@@ -103,6 +103,7 @@
     <Compile Include="Entities\ILLink.cs" />
     <Compile Include="Entities\LAttributeOwner.cs" />
     <Compile Include="Entities\LEffectivity.cs" />
+    <Compile Include="Entities\LEnum.cs" />
     <Compile Include="Entities\Meta\CreationInfo.cs" />
     <Compile Include="Entities\Meta\ILAttributeInfo.cs" />
     <Compile Include="Entities\Meta\LEffectivityTypeInfo.cs" />
@@ -139,7 +140,9 @@
     <Compile Include="Entities\Meta\LAttributeInfo.cs" />
     <Compile Include="Entities\Meta\LLinkInfo.cs" />
     <Compile Include="Entities\Meta\LLinkInfoBetweenTypes.cs" />
+    <Compile Include="ILoodsmanWindowMessenger.cs" />
     <Compile Include="LoodsmanMeta.cs" />
+    <Compile Include="LoodsmanWindowMessenger.cs" />
     <Compile Include="PluginBase\LoodsmanNetPluginBase.cs" />
     <Compile Include="LoodsmanProxy.cs" />
     <Compile Include="PluginBase\LoodsmanWPFNetPluginBase.cs" />
@@ -151,6 +154,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyBuilder.cs" />
     <Compile Include="Helpers\TreeTraversal.cs" />
+    <Compile Include="WindowMessengerBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Loodsman">

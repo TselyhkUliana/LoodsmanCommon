@@ -17,6 +17,7 @@ namespace LoodsmanCommon.Demo
       menu.AddMenuItem("Тест демо#В работу(No empty ChekOut), удалить, отказ", Command3, CheckCommand);
       menu.AddMenuItem("Тест демо#Преобразование единиц измерения", Command4, CheckCommand);
       menu.AddMenuItem("Тест демо#Получение информации об организационной структуре", Command5, FreeCheckCommand);
+      menu.AddMenuItem("Тест демо#Оконные сообщения", Command6, CheckCommand);
     }
 
     protected override bool CheckCommand(INetPluginCall iNetPC)
@@ -99,6 +100,11 @@ namespace LoodsmanCommon.Demo
         orgInfo = $"{orgInfo}Наименование: {mainDepartament.Name}\nПодразделений: {departamentsCount}\nДолжностей: {positionsCount}\n\n";
       }
       MessageBox.Show(orgInfo, "Информация об организационной структуре");
+    }
+
+    private void Command6(INetPluginCall call)
+    {
+      _windowMessenger.OpenObjectInNewWindow(311);
     }
 
     private bool FreeCheckCommand(INetPluginCall iNetPC)
