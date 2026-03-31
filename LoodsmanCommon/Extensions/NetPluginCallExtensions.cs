@@ -18,6 +18,23 @@ namespace LoodsmanCommon
     public static bool Native_IsAdmin(this INetPluginCall pc) =>
         pc.RunMethod("IsAdmin") as int? == 1;
 
+    /// <summary>
+    /// Получает гиперссылку на объект или файл
+    /// </summary>
+    /// <param name="objectId">Идентификатор объекта либо идентификатор документа, к которому относится файл FileName.</param>
+    /// <param name="parentObjectId">Идентификатор родительского объекта.</param>
+    /// <param name="checkOutName">Название (идентификатор) рабочего проекта.</param>
+    /// <param name="fileName">Имя файла, относящегося к документу с идентификатором ObjectID.</param>
+    /// <returns>Строка, содержащая гиперссылку на объект в дереве ЛОЦМАН Клиент или на файл.</returns>
+    /// <remarks>
+    /// <br/> Если рабочий проект неизвестен, либо объект, для которого создается гиперссылка не взят на изменение, параметр СheckOutName может быть пустой строкой.
+    /// <br/> Если родительского объекта нет либо он неизвестен, то параметр ParentObjectID может быть равен 0.
+    /// <br/> При создании ссылки на объект параметр FileName может быть равен пустой строке.
+    /// <br/> При вызове созданной гиперссылки ЛОЦМАН Клиент выполнит переход на соответствующий объект в дереве или файл.
+    /// </remarks>
+    public static string Native_CGetHyperLink(this INetPluginCall pc, int objectId, int parentObjectId, string checkOutName = "", string fileName = "") =>
+        pc.RunMethod("CGetHyperLink", pc.PluginCall.DBName, checkOutName, objectId, parentObjectId, fileName) as string;
+
     /// <summary> Возвращает случаи использования прокси, типа объекта и типа документа.
     /// <br/>
     /// <br/>Возвращает набор данных с полями:

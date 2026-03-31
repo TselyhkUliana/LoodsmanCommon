@@ -29,5 +29,9 @@
     /// Разделитель идентификаторов используемый в методах.
     /// </summary>
     public const string ID_SEPARATOR = ",";
+
+    public const string ATTRNAME_DEVELOPED = "Разработал";
+    public const string ATTRNAME_SUBDIVISION = "Подразделение";
+    public const string ATTRNAME_CREATION_DATE = "Дата создания";
   }
 }

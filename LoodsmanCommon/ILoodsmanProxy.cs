@@ -108,6 +108,12 @@ namespace LoodsmanCommon
     /// <returns> Возвращает атрибуты связи, включая служебные. </returns>
     IEnumerable<ILAttribute> GetLinkAttributes(ILLink link);
 
+    /// <summary>
+    /// Инициализирует атрибуты, заполняемые при создании объекта: разработчик, подразделение и дата создания.
+    /// </summary>
+    /// <param name="obj">Объект.</param>
+    void InitializeCreationAttributes(ILObject obj);
+
     /// <summary> Приводит значение к заданной единице измерения. </summary>
     /// <param name="value"> Значение. </param>
     /// <param name="sourceMeasureUnit"> Исходная единица измерения. </param>
@@ -283,5 +289,32 @@ namespace LoodsmanCommon
     /// <br/>В режиме редактирования объектов возвращает имя файла на рабочем диске. Например: result='Х:\Folder\SubFolder\FileName.ext'.
     /// </returns>
     string GetFile(ILObject lObject, string fileName, string relativePath);
+
+    /// <summary>
+    /// Добавляет, удаляет или обновляет директивные права доступа пользователя, должности или организационной единицы к объекту.
+    /// </summary>
+    /// <param name="lObject">Объект. </param>
+    /// <param name="idSubject">Идентификатор субъекта доступа.</param>
+    /// <param name="subjectType">Идентификатор субъекта доступа.
+    /// <br/>Тип субъекта доступа:
+    /// <br/>0 – пользователь;
+    /// <br/>1 – должность;
+    /// <br/>2 – организационная единица.
+    ///</param>
+    /// <param name="privileges">Уровень прав доступа:
+    /// <br/>0 – запрет доступа;
+    /// <br/>1 – установить доступ Только чтение;
+    /// <br/>2 – установить доступ Чтение/запись;
+    /// <br/>3 – установить доступ Полный доступ
+    ///</param>
+    /// <param name="boDel">Признак удаления прав доступа (true – удалять, false – не удалять).</param>
+    /// <returns>true, если права успешно назначены; иначе false.</returns>
+    /// <remarks>
+    /// Метод работает следующим образом: 
+    /// <br/>если boDel = true, то заданные права удаляются;
+    /// <br/>если директивные права доступа к объекту для субъекта уже существуют, то их уровень будет изменен;
+    /// <br/>если директивные права доступа к объекту для субъекта отсутствуют, то они будут добавлены.
+    /// </remarks>
+    bool TryGrantRight(ILObject lObject, int idSubject, int subjectType, int privileges, bool boDel);
   }
 }

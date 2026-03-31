@@ -16,6 +16,11 @@ namespace LoodsmanCommon
     private string _checkOutName;
     private ILObject _selectedObject;
     private ILObject[] _selectedObjects = new ILObject[] { };
+    private string _currentUserFullName;
+    private string _currentUserDepartmentName;
+    private string CurrentUserDepartmentName => _currentUserDepartmentName ??= Meta.CurrentUser?.Ancestors()
+        .FirstOrDefault(x => x.Kind == OrganisationUnitKind.Department || x.Kind == OrganisationUnitKind.MainDepartment)?.Name ?? string.Empty;
+    private string CurrentUserFullName => _currentUserFullName ??= Meta.CurrentUser?.FullName ?? string.Empty;
 
     public LoodsmanProxy(INetPluginCall iNetPC, ILoodsmanMeta loodsmanMeta)
     {
@@ -35,10 +40,10 @@ namespace LoodsmanCommon
     public string CheckOutName => GetCheckOutName();
 
     private string GetCheckOutName()
-    {
+    {      
       var pluginCall = _application.GetPluginCall();
       return _checkOutName = pluginCall.CheckOut != 0 ? pluginCall.CheckOut.ToString() : string.Empty; ;
-    }
+    }    
 
     private ILObject GetSelectedObject()
     {
@@ -273,6 +278,13 @@ namespace LoodsmanCommon
       }
 
       return new LAttribute(this, owner, item, value, measureId, unitId);
+    }
+
+    public void InitializeCreationAttributes(ILObject obj)
+    {
+      FillAttribute(obj, Constants.ATTRNAME_DEVELOPED, CurrentUserFullName);
+      FillAttribute(obj, Constants.ATTRNAME_SUBDIVISION, CurrentUserDepartmentName);
+      FillAttribute(obj, Constants.ATTRNAME_CREATION_DATE, DateTime.Now.ToString("dd.MM.yyyy"));
     }
 
     public double ConverseValue(double value, LMeasureUnit sourceMeasureUnit, LMeasureUnit destMeasureUnit)
@@ -513,5 +525,24 @@ namespace LoodsmanCommon
       _checkOutName = string.Empty;
     }
     #endregion
+
+    public bool TryGrantRight(ILObject lObject, int idSubject, int subjectType, int privileges, bool boDel)
+    {
+      try
+      {
+        INetPC.RunMethod("UpGrantOnVersion2", lObject.Type.Name, lObject.Name, lObject.Version, lObject.Id, idSubject, subjectType, privileges, boDel);
+        return true;
+      }
+      catch (System.Runtime.InteropServices.COMException)
+      {
+        return false;
+      }
+    }
+
+    private void FillAttribute(ILAttributeOwner owner, string name, string? value)
+    {
+      if (owner.Attributes.TryGetValue(name, out var attribute))
+        attribute.Value = value;
+    }
   }
 }
