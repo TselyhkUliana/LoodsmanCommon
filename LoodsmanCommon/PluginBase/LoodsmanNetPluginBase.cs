@@ -50,7 +50,7 @@ namespace LoodsmanCommon
       _application = (ILoodsmanApplication)iNetPC.PluginCall;
       _meta = GetLoodsmanMeta(iNetPC);
       _proxy = GetLoodsmanProxy(iNetPC);
-      _windowMessenger = GetLoodsmanWindowMessenger(iNetPC);
+      _windowMessenger = GetLoodsmanWindowMessenger();
     }
 
     /// <summary> Возвращает прокси объект, имеет смысл переопределять в случае собственной реализации интерфейса. </summary>
@@ -72,9 +72,9 @@ namespace LoodsmanCommon
     /// </summary>
     /// <param name="iNetPC">Интерфейс взаимодействия с плагином.</param>
     /// <returns></returns>
-    protected virtual ILoodsmanWindowMessenger GetLoodsmanWindowMessenger(INetPluginCall iNetPC)
+    protected virtual ILoodsmanWindowMessenger GetLoodsmanWindowMessenger()
     {
-      return WindowMessengerBuilder.GetInstance(iNetPC);
+      return WindowMessengerBuilder.GetInstance();
     }
 
     /// <summary> Вызывается при необходимости найти сборку. </summary>

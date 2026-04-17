@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Ascon.Plm.Loodsman.PluginSDK;
+using System.Collections.Generic;
 
 namespace LoodsmanCommon
 {
   public interface ILoodsmanWindowMessenger
   {
+    /// <summary>Инициализирует или переинициализирует дескрипторы окна.</summary>
+    /// <remarks>
+    /// Метод можно вызывать повторно — предыдущие значения будут перезаписаны.
+    ///<br/> Используется при смене активного окна или контекста плагина.
+    /// </remarks>
+    void Initialize(INetPluginCall call);
+
     /// <summary>
     /// Обновляет родительский объект выделенного в активном фрейме объекта, и переходит к объекту, с заданым идентификатором. Получатель: MDI окно
     /// </summary>

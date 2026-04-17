@@ -5,9 +5,9 @@ namespace LoodsmanCommon
   internal class WindowMessengerBuilder
   {
     private static ILoodsmanWindowMessenger _loodsmanWindowMessenger;
-    public static ILoodsmanWindowMessenger GetInstance(INetPluginCall iNetPC)
+    public static ILoodsmanWindowMessenger GetInstance()
     {
-      return _loodsmanWindowMessenger ??= new LoodsmanWindowMessenger(iNetPC);
+      return _loodsmanWindowMessenger ??= new LoodsmanWindowMessenger();
     }
   }
 }

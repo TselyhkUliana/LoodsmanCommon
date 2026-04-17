@@ -104,7 +104,9 @@ namespace LoodsmanCommon.Demo
 
     private void Command6(INetPluginCall call)
     {
-      _windowMessenger.OpenObjectInNewWindow(311);
+      _windowMessenger.Initialize(call);
+      _windowMessenger.GoToObject(311);
+      //_windowMessenger.OpenObjectInNewWindow(311);
     }
 
     private bool FreeCheckCommand(INetPluginCall iNetPC)

@@ -7,22 +7,41 @@ namespace LoodsmanCommon
 {
   internal class LoodsmanWindowMessenger : ILoodsmanWindowMessenger
   {
-    private readonly IntPtr _clientHandle;
-    private readonly IntPtr _mainHandle;
+    private static IntPtr _clientHandle;
+    private static IntPtr _mainHandle;
+    private static bool _initialized;
 
-    public LoodsmanWindowMessenger(INetPluginCall iNetPC)
+    /// <summary>Дескриптор активного MDI окна</summary>
+    private static IntPtr ClientHandle =>
+        _initialized
+            ? _clientHandle
+            : throw new InvalidOperationException("WindowMessenger не инициализирован. Вызовите Initialize.");
+
+    /// <summary>Дескриптор главного окна</summary>
+    private static IntPtr MainHandle =>
+        _initialized
+            ? _mainHandle
+            : throw new InvalidOperationException("WindowMessenger не инициализирован. Вызовите Initialize.");
+
+    /// <summary>Инициализирует или переинициализирует дескрипторы окна.</summary>
+    /// <remarks>
+    /// Метод можно вызывать повторно — предыдущие значения будут перезаписаны.
+    ///<br/> Используется при смене активного окна или контекста плагина.
+    /// </remarks>
+    public void Initialize(INetPluginCall call)
     {
-      _clientHandle = (IntPtr)iNetPC.PluginCall.ClientHandle;
-      _mainHandle = (IntPtr)iNetPC.PluginCall.MainHandle;
+      _clientHandle = (IntPtr)call.PluginCall.ClientHandle;
+      _mainHandle = (IntPtr)call.PluginCall.MainHandle;
+      _initialized = true;
     }
 
-    public void GoToChild(int id) => Post(_clientHandle, WindowMessage.WM_GOTOCHILD, (IntPtr)id, IntPtr.Zero);
+    public void GoToChild(int id) => Post(ClientHandle, WindowMessage.WM_GOTOCHILD, (IntPtr)id, IntPtr.Zero);
 
-    public void GoToNode(int id) => Post(_clientHandle, WindowMessage.WM_GOTONODE, (IntPtr)id, IntPtr.Zero);
+    public void GoToNode(int id) => Post(ClientHandle, WindowMessage.WM_GOTONODE, (IntPtr)id, IntPtr.Zero);
 
-    public void GoToObject(int id) => Post(_clientHandle, WindowMessage.WM_GOTOOBJECT, (IntPtr)id, IntPtr.Zero);
+    public void GoToObject(int id) => Post(ClientHandle, WindowMessage.WM_GOTOOBJECT, (IntPtr)id, IntPtr.Zero);
 
-    public void GoToObject2011(int id) => Post(_clientHandle, WindowMessage.WM_GOTOOBJECT2011, (IntPtr)id, IntPtr.Zero);
+    public void GoToObject2011(int id) => Post(ClientHandle, WindowMessage.WM_GOTOOBJECT2011, (IntPtr)id, IntPtr.Zero);
 
     public void OpenObjectInNewWindow(int id)
     {
@@ -33,7 +52,7 @@ namespace LoodsmanCommon
         ObjectId = (uint)id,
         ObjectIds = IntPtr.Zero
       };
-      SendMessageStruct(_mainHandle, WindowMessage.WM_OPENOBJECTSINNEWWINDOW, msg);
+      SendMessageStruct(MainHandle, WindowMessage.WM_OPENOBJECTSINNEWWINDOW, msg);
     }
 
     public void OpenObjectsInNewWindow(IEnumerable<int> ids)
@@ -49,7 +68,7 @@ namespace LoodsmanCommon
           ObjectId = 0,
           ObjectIds = strPtr
         };
-        SendMessageStruct(_mainHandle, WindowMessage.WM_OPENOBJECTSINNEWWINDOW, msg);
+        SendMessageStruct(MainHandle, WindowMessage.WM_OPENOBJECTSINNEWWINDOW, msg);
       }
       finally
       {
@@ -57,13 +76,13 @@ namespace LoodsmanCommon
       }
     }
 
-    public void RefreshCheckoutList() => Post(_mainHandle, WindowMessage.WM_REFRESHCHECKOUTLIST, IntPtr.Zero, IntPtr.Zero);
+    public void RefreshCheckoutList() => Post(MainHandle, WindowMessage.WM_REFRESHCHECKOUTLIST, IntPtr.Zero, IntPtr.Zero);
 
-    public void RefreshParent(int id) => Post(_clientHandle, WindowMessage.WM_REFRESHPARENT, (IntPtr)id, IntPtr.Zero);
+    public void RefreshParent(int id) => Post(ClientHandle, WindowMessage.WM_REFRESHPARENT, (IntPtr)id, IntPtr.Zero);
 
-    public void RefreshProjectList() => Post(_clientHandle, WindowMessage.WM_REFRESHPROJECTLIST, IntPtr.Zero, IntPtr.Zero);
+    public void RefreshProjectList() => Post(ClientHandle, WindowMessage.WM_REFRESHPROJECTLIST, IntPtr.Zero, IntPtr.Zero);
 
-    public void RefreshFrameByType(LType type) => Post(_clientHandle, WindowMessage.WM_REFRESHFRAMEBYTYPE, (IntPtr)type, IntPtr.Zero);
+    public void RefreshFrameByType(LType type) => Post(ClientHandle, WindowMessage.WM_REFRESHFRAMEBYTYPE, (IntPtr)type, IntPtr.Zero);
 
     private void SendMessageStruct<T>(IntPtr hwnd, WindowMessage windowMessage, T data) where T : struct
     {
